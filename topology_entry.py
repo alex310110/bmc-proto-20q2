@@ -1,0 +1,2 @@
+class TopologyEntry:
+    pass
