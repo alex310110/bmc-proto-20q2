@@ -1,3 +1,6 @@
+""" An example board in a tray
+"""
+
 from entity import BmcEntity
 from .card_example_a import CardExampleA
 

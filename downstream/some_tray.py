@@ -1,3 +1,8 @@
+""" An example of entry for topology discovery. The __init__ may do nothing if
+    this class is found to be not for the actual tray it's running. This
+    creates opportunity for single BMC image supporting multiple platforms.
+"""
+
 from .board_example_a import BoardExampleA
 from topology_entry import TopologyEntry
 

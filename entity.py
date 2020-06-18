@@ -1,5 +1,10 @@
+""" The abstract class for BMC entities
+"""
+
 class BmcEntity:
     def __init__(self, entity_list, name):
+        """ Entity initialization
+        """
         print("Initializing %s" % name)
         entity_list.append(self)
         self.name = name
@@ -10,7 +15,11 @@ class BmcEntity:
         return self.name
 
     def get_sensors(self):
+        """ Returns a list of entity's sensors.
+        """
         return self.sensors
 
     def update_sensors(self):
+        """ Telling the entity to update its sensor readings.
+        """
         pass

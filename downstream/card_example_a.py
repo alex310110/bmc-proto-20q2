@@ -1,3 +1,6 @@
+""" An example PCIe card populated on a board.
+"""
+
 from entity import BmcEntity
 
 
