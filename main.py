@@ -18,13 +18,18 @@ class BmcMain:
 
         print('\nList of entities:')
         print('\n'.join([str(e) for e in self.entity_list]))
+        print()
 
     def sensor_console(self):
         print("Ctrl-C to exit, Enter to refresh sensor readings")
         while True:
-            input()
+            for e in self.entity_list:
+                e.update_sensors()
+
+            break
+            # input()
 
 
 if __name__ == '__main__':
     bmc = BmcMain()
-    # bmc.sensor_console()
+    bmc.sensor_console()
