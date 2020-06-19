@@ -9,7 +9,6 @@ class BmcEntity:
         entity_list.append(self)
         self.name = name
         self.children = []
-        self.devices = []
         self.sensors = []
 
     def __str__(self):

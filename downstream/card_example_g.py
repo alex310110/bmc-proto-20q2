@@ -1,6 +1,7 @@
 """ An example PCIe card populated on a board.
 """
 
+from .device_xam2730 import XAM2730
 from entity import BmcEntity
 from sensor import Sensor
 from i2c import I2CMux, I2CHwmonDevice
@@ -28,16 +29,13 @@ class CardExampleG(BmcEntity):
         self.pcie_12v = I2CHwmonDevice('pcie_12v', i2c_bus, 0x20, 'ain203')
         # example of writing hwmon attribute
         self.pcie_12v.set_attribute('shunt_resistor', 2000)
-        self.devices.append(self.pcie_12v)
 
         self.asic = []
         for i in range(2):
             self.asic.append(
                 I2CHwmonDevice('asic_%d' % i, self.i2c_children[i], 0x10 + i, 'asic-i2c-drv'))
-        self.devices += self.asic
 
-        self.vr = I2CHwmonDevice('vdd_0r80', self.i2c_children[7], 0x56, 'xam2730')
-        self.devices.append(self.vr)
+        self.vr = XAM2730('vdd_0r80', self.i2c_children[7], 0x56)
 
         self._setup_sensors()
 
