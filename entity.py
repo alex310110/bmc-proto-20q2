@@ -10,13 +10,13 @@ class BmcEntity:
         self.name = name
         self.children = []
         self.devices = []
-        self.sensors = []
+        self.sensors = dict()
 
     def __str__(self):
         return self.name
 
     def get_sensors(self):
-        """ Returns a list of entity's sensors.
+        """ Returns entity's sensors.
         """
         return self.sensors
 

@@ -1,6 +1,8 @@
 """ Abstract classes for I2C
 """
 
+import random
+
 # Mock bus number iterator
 highest_i2c_bus = 8
 highest_hwmon_num = -1
@@ -64,3 +66,18 @@ class I2CHwmonDevice(I2CDevice):
         self.hwmon_num = highest_hwmon_num + 1
         highest_hwmon_num = self.hwmon_num
         print("  Created hwmon directory hwmon%d" % self.hwmon_num)
+
+    def get_reading_from_label(self, label):
+        """ Mocks hwmon readings
+        """
+        if label.startswith('temp'):
+            return round(random.uniform(25, 40), 2)
+        elif label.startswith('curr'):
+            return round(random.uniform(4, 8), 2)
+        elif label.startswith('power'):
+            return round(random.uniform(20, 60), 2)
+        elif label.startswith('in'):
+            if '12v' in self.name:
+                return round(random.uniform(12, 13), 2)
+            else:
+                return round(random.uniform(0.6, 0.9), 2)

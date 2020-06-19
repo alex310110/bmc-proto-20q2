@@ -41,9 +41,16 @@ class BmcMain:
         """
         print("Ctrl-C to exit, Enter to refresh sensor readings")
         while True:
+            print()
+
             # Poll all the sensors in all entities identified.
             for e in self.entity_list:
                 e.update_sensors()
+
+            # read all the sensors
+            for e in self.entity_list:
+                for sensor in e.get_sensors().values():
+                    print(e.name, sensor.get_reading_for_console())
 
             break
             # input()
