@@ -6,7 +6,7 @@ from sensor import Sensor
 from i2c import I2CMux, I2CHwmonDevice
 
 
-class CardExampleA(BmcEntity):
+class CardExampleG(BmcEntity):
     """ When translating to C/C++ source code, we may declare the device
         variables like self.pcie_12v, self.vr, self.asic and sensor variables
         in the header file. Then it would be very clear that what entity
@@ -14,18 +14,18 @@ class CardExampleA(BmcEntity):
     """
 
     def __init__(self, entity_list, index, i2c_bus):
-        BmcEntity.__init__(self, 'card_a_%d' % index, entity_list)
+        BmcEntity.__init__(self, 'card_g_%d' % index, entity_list)
 
         self.index = index
         self.i2c_bus = i2c_bus
         self.sensor_map = dict()
 
         # init MUX
-        self.i2c_mux = I2CMux('card_a_mux', i2c_bus, 0x71, 'pca9547')
+        self.i2c_mux = I2CMux('card_g_mux', i2c_bus, 0x71, 'apc9457')
         self.i2c_children = self.i2c_mux.get_channels()
 
         # init devices
-        self.pcie_12v = I2CHwmonDevice('pcie_12v', i2c_bus, 0x20, 'ina230')
+        self.pcie_12v = I2CHwmonDevice('pcie_12v', i2c_bus, 0x20, 'ain203')
         # example of writing hwmon attribute
         self.pcie_12v.set_attribute('shunt_resistor', 2000)
         self.devices.append(self.pcie_12v)
@@ -33,10 +33,10 @@ class CardExampleA(BmcEntity):
         self.asic = []
         for i in range(2):
             self.asic.append(
-                I2CHwmonDevice('asic_%d' % i, self.i2c_children[i], 0x10 + i, 'asiccodename'))
+                I2CHwmonDevice('asic_%d' % i, self.i2c_children[i], 0x10 + i, 'asic-i2c-drv'))
         self.devices += self.asic
 
-        self.vr = I2CHwmonDevice('vdd_0r80', self.i2c_children[7], 0x56, 'max20730')
+        self.vr = I2CHwmonDevice('vdd_0r80', self.i2c_children[7], 0x56, 'xam2730')
         self.devices.append(self.vr)
 
         self._setup_sensors()

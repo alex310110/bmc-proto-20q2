@@ -43,9 +43,9 @@ class I2CMux(I2CDevice):
         global highest_i2c_bus
         channel_0_bus = highest_i2c_bus + 1
 
-        if device == 'pca9546':
+        if device == 'apc9456':
             num_of_channels = 4
-        elif device == 'pca9547':
+        elif device == 'apc9457':
             num_of_channels = 8
         else:
             num_of_channels = 2
