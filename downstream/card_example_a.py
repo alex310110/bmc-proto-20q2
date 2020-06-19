@@ -19,6 +19,8 @@ class CardExampleA(BmcEntity):
 
         # init devices
         self.pcie_12v = I2CHwmonDevice('pcie_12v', i2c_bus, 0x20, 'ina230')
+        # example of writing hwmon attribute
+        self.pcie_12v.set_attribute('shunt_resistor', 2000)
         self.devices.append(self.pcie_12v)
 
         self.asic = []
@@ -48,21 +50,15 @@ class CardExampleA(BmcEntity):
             self.sensors[sensor.name] = sensor
 
     def update_sensors(self):
-        self.sensors['pcie_12v_voltage'].value = \
-            self.pcie_12v.get_reading_from_label('in1')
-        self.sensors['pcie_12v_current'].value = \
-            self.pcie_12v.get_reading_from_label('curr1')
-        self.sensors['pcie_12v_power'].value = \
-            self.pcie_12v.get_reading_from_label('power1')
+        self.sensors['pcie_12v_voltage'].value = self.pcie_12v.get_reading('in1')
+        self.sensors['pcie_12v_current'].value = self.pcie_12v.get_reading('curr1')
+        self.sensors['pcie_12v_power'].value = self.pcie_12v.get_reading('power1')
 
         # perform sensor aggregation
         self.sensors['asic_package_temperature'].value = \
-            max(self.asic[0].get_reading_from_label('temp1'),
-                self.asic[1].get_reading_from_label('temp1'))
+            max(self.asic[0].get_reading('temp1'),
+                self.asic[1].get_reading('temp1'))
 
-        self.sensors['vdd_0r80_temperature'].value = \
-            self.vr.get_reading_from_label('temp1')
-        self.sensors['vdd_0r80_voltage'].value = \
-            self.vr.get_reading_from_label('in2')
-        self.sensors['vdd_0r80_current'].value = \
-            self.vr.get_reading_from_label('curr2')
+        self.sensors['vdd_0r80_temperature'].value = self.vr.get_reading('temp1')
+        self.sensors['vdd_0r80_voltage'].value = self.vr.get_reading('vout2')
+        self.sensors['vdd_0r80_current'].value = self.vr.get_reading('iout2')
