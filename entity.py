@@ -17,8 +17,7 @@ class BmcEntity:
     def on_host_event(self, event):
         """ Called when the host/main 12V rail has an event
         """
-        for c in self.children:
-            c.on_host_event(event)
+        pass
 
     def get_sensors(self):
         """ Returns entity's sensors.

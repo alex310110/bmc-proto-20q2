@@ -116,7 +116,7 @@ class I2CEeprom(I2CDevice):
         if self.addr == 0x52:
             remainder = self.bus % 4
             return ['card_g', 'card_v', '', ''][remainder]
-        elif self.addr == 0x54:
+        elif self.bus in [26, 42] and self.addr == 0x54:
             return 'card_c'
         elif self.addr == 0x40:
             return 'board_a'

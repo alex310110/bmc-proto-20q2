@@ -56,10 +56,8 @@ class CardExampleG(BmcEntity):
             self.sensors.append(sensor)
 
     def on_host_event(self, event):
-        super().on_host_event(event)
         if event not in ['on', 'reset']:
             return
-
         # example of setting VR voltage output
         self.vr.transfer([0x21, 0x95, 0x01], 0)
 
