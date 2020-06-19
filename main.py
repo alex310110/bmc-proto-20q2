@@ -54,7 +54,6 @@ class BmcMain:
                 for sensor in e.get_sensors():
                     print(e.name, sensor.get_reading_for_console())
 
-            break
             input()
 
 
