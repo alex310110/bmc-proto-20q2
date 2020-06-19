@@ -39,7 +39,11 @@ class BmcMain:
             but I simplify things here as a demo, where the protocol layer also
             initiates the sensor polling.
         """
-        print("Ctrl-C to exit, Enter to refresh sensor readings")
+        print("Host powering up")
+        for e in self.entity_list:
+            e.on_host_event('on')
+
+        print("\nCtrl-C to exit, Enter to refresh sensor readings")
         while True:
             print()
 
@@ -49,7 +53,7 @@ class BmcMain:
 
             # read all the sensors
             for e in self.entity_list:
-                for sensor in e.get_sensors().values():
+                for sensor in e.get_sensors():
                     print(e.name, sensor.get_reading_for_console())
 
             break

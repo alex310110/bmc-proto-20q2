@@ -10,10 +10,16 @@ class BmcEntity:
         self.name = name
         self.children = []
         self.devices = []
-        self.sensors = dict()
+        self.sensors = []
 
     def __str__(self):
         return self.name
+
+    def on_host_event(self, event):
+        """ Called when the host/main 12V rail has an event
+        """
+        for c in self.children:
+            c.on_host_event(event)
 
     def get_sensors(self):
         """ Returns entity's sensors.

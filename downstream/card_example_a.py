@@ -7,11 +7,18 @@ from i2c import I2CMux, I2CHwmonDevice
 
 
 class CardExampleA(BmcEntity):
+    """ When translating to C/C++ source code, we may declare the device
+        variables like self.pcie_12v, self.vr, self.asic and sensor variables
+        in the header file. Then it would be very clear that what entity
+        children, devices and sensors the entity has.
+    """
+
     def __init__(self, entity_list, index, i2c_bus):
         BmcEntity.__init__(self, 'card_a_%d' % index, entity_list)
 
         self.index = index
         self.i2c_bus = i2c_bus
+        self.sensor_map = dict()
 
         # init MUX
         self.i2c_mux = I2CMux('card_a_mux', i2c_bus, 0x71, 'pca9547')
@@ -47,18 +54,27 @@ class CardExampleA(BmcEntity):
 
         for name, sensor_property in sensor_table:
             sensor = Sensor(name, sensor_property)
-            self.sensors[sensor.name] = sensor
+            self.sensor_map[name + '_' + sensor_property] = sensor
+            self.sensors.append(sensor)
+
+    def on_host_event(self, event):
+        super().on_host_event(event)
+        if event not in ['on', 'reset']:
+            return
+
+        # example of setting VR voltage output
+        self.vr.transfer([0x21, 0x95, 0x01], 0)
 
     def update_sensors(self):
-        self.sensors['pcie_12v_voltage'].value = self.pcie_12v.get_reading('in1')
-        self.sensors['pcie_12v_current'].value = self.pcie_12v.get_reading('curr1')
-        self.sensors['pcie_12v_power'].value = self.pcie_12v.get_reading('power1')
+        self.sensor_map['pcie_12v_voltage'].value = self.pcie_12v.get_reading('in1')
+        self.sensor_map['pcie_12v_current'].value = self.pcie_12v.get_reading('curr1')
+        self.sensor_map['pcie_12v_power'].value = self.pcie_12v.get_reading('power1')
 
-        # perform sensor aggregation
-        self.sensors['asic_package_temperature'].value = \
+        # example of sensor aggregation
+        self.sensor_map['asic_package_temperature'].value = \
             max(self.asic[0].get_reading('temp1'),
                 self.asic[1].get_reading('temp1'))
 
-        self.sensors['vdd_0r80_temperature'].value = self.vr.get_reading('temp1')
-        self.sensors['vdd_0r80_voltage'].value = self.vr.get_reading('vout2')
-        self.sensors['vdd_0r80_current'].value = self.vr.get_reading('iout2')
+        self.sensor_map['vdd_0r80_temperature'].value = self.vr.get_reading('temp1')
+        self.sensor_map['vdd_0r80_voltage'].value = self.vr.get_reading('vout2')
+        self.sensor_map['vdd_0r80_current'].value = self.vr.get_reading('iout2')

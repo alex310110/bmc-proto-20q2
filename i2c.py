@@ -22,6 +22,14 @@ class I2CDevice:
         print('  Init I2C device %s type %s at bus %d addr 0x%02x' %
               (name, device, bus, addr))
 
+    def transfer(self, write_bytes, read_byte_num):
+        """ Interact with I2C interface directly.
+            This assumes the BMC app is the only one initiates any I2C
+            interactions, or there may be a race in I2C transactions.
+        """
+        print('  i2ctransfer -f -y %d w%d@0x%02x %s r%d' %
+            (self.bus, len(write_bytes), self.addr, str(write_bytes), read_byte_num))
+
 
 class I2CMux(I2CDevice):
     def __init__(self, name, bus, addr, device):
