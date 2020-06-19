@@ -4,7 +4,7 @@
 import random
 
 # Mock bus number iterator
-highest_i2c_bus = 8
+highest_i2c_bus = 7
 highest_hwmon_num = -1
 
 
@@ -21,6 +21,14 @@ class I2CDevice:
         # echo ${device_name} ${addr} > /sys/bus/i2c/devices/i2c-${bus}/new_device
         print('  Init I2C device %s type %s at bus %d addr 0x%02x' %
               (name, device, bus, addr))
+
+    def delete(self):
+        """ For various reasons, you may want to remove the driver...
+            This can be implemented by:
+            # echo ${addr} > /sys/bus/i2c/devices/i2c-${bus}/delete_device
+        """
+        print('  Remove I2C device %s type %s at bus %d addr 0x%02x' %
+              (self.name, self.device, self.bus, self.addr))
 
     def transfer(self, write_bytes, read_byte_num):
         """ Interact with I2C interface directly.
@@ -94,3 +102,22 @@ class I2CHwmonDevice(I2CDevice):
         """ Set an attribute in hwmon interface
         """
         print('  Set hwmon%d attr %s to %d' % (self.hwmon_num, label, value))
+
+
+class I2CEeprom(I2CDevice):
+    def __init__(self, name, bus, addr, device):
+        """ An I2C EEPROM device
+        """
+        I2CDevice.__init__(self, name, bus, addr, device)
+
+    def get_content(self):
+        """ Mocks EEPROM content for hardware recognition
+        """
+        if self.addr == 0x52:
+            remainder = self.bus % 4
+            return ['card_g', 'card_v', '', ''][remainder]
+        elif self.addr == 0x54:
+            return 'card_c'
+        elif self.addr == 0x40:
+            return 'board_a'
+        return ''
