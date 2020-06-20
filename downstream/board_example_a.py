@@ -42,7 +42,7 @@ class BoardExampleA(BmcEntity):
                 continue
 
             elif eeprom.get_content() == 'card_v':
-                card_v = CardExampleV(entity_list, i, i2c_children[i])
+                card_v = CardExampleV(entity_list, i2c_children[i])
                 card_v.eeprom = eeprom
                 self.children.append(card_v)
                 continue

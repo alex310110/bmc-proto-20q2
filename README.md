@@ -30,3 +30,6 @@ CardExampleG.__init__() and CardExampleG.on_host_event() in downstream/card_exam
 ### Device Kernel Driver Calibration
 XAM2730.get_reading() in downstream/device_xam2730.py for NDA device.
 XAM2734.get_reading() in device_xam2734.py for public device available upstream.
+
+### Example for Backward Compatibility - Config File Based Sensors
+card_example_v.py

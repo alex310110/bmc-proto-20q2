@@ -1,17 +1,33 @@
-""" An example PCIe card populated on a board.
+""" An example PCIe card populated on a board, initialized with config file
 """
 
-from entity import BmcEntity
-from sensor import Sensor
-from i2c import I2CHwmonDevice
+from entity import ConfigBasedEntity
 
 
-class CardExampleV(BmcEntity):
-    def __init__(self, entity_list, index, i2c_bus):
-        BmcEntity.__init__(self, 'card_v_%d' % index, entity_list)
+class CardExampleV(ConfigBasedEntity):
+    config = {
+        'name': 'card v $bus-8',
+        'devices': [
+            {
+                'addr': 0x10,
+                'bus': '$bus',
+                'hwmon': {
+                    'temp1': "card v $bus-8 0 temp1",
+                    "temp2": "card v $bus-8 0 temp2",
+                },
+                'type': 'tpm144',
+            },
+            {
+                'addr': 0x20,
+                'bus': '$bus',
+                'hwmon': {
+                    'temp1': "card v $bus-8 1 temp1",
+                    "temp2": "card v $bus-8 1 temp2",
+                },
+                'type': 'tpm144',
+            },
+        ]
+    }
 
-        self.index = index
-        self.i2c_bus = i2c_bus
-
-    def update_sensors(self):
-        pass
+    def __init__(self, entity_list, i2c_bus):
+        ConfigBasedEntity.__init__(self, entity_list, i2c_bus, CardExampleV.config)
